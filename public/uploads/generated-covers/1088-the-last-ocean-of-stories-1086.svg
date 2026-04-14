@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1300" viewBox="0 0 900 1300">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5c2b12"/>
+      <stop offset="100%" stop-color="#b85c38"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="30%" cy="15%" r="75%">
+      <stop offset="0%" stop-color="#f2d0a4" stop-opacity="0.58"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="900" height="1300" rx="44" fill="url(#bg)"/>
+  <rect width="900" height="1300" rx="44" fill="url(#glow)"/>
+  <circle cx="760" cy="180" r="180" fill="rgba(255,255,255,0.08)"/>
+  <circle cx="140" cy="1120" r="210" fill="rgba(255,255,255,0.06)"/>
+  <rect x="40" y="40" width="820" height="1220" rx="40" fill="rgba(7,10,20,0.16)" stroke="rgba(255,255,255,0.18)"/>
+  <rect x="64" y="64" width="772" height="1172" rx="34" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)"/>
+  <rect x="64" y="72" width="220" height="44" rx="22" fill="rgba(255,255,255,0.18)"/>
+  <text x="94" y="101" fill="white" font-size="21" font-family="Segoe UI, Arial, sans-serif" font-weight="700" letter-spacing="2">SMART LIBRARY</text>
+  <text x="64" y="170" fill="rgba(255,255,255,0.82)" font-size="24" font-family="Segoe UI, Arial, sans-serif" font-weight="700" letter-spacing="4">HISTORY</text>
+  <rect x="64" y="214" width="772" height="108" rx="28" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.10)"/>
+  <text x="96" y="280" fill="white" font-size="58" font-family="Georgia, Times New Roman, serif" font-weight="700">Collector's</text>
+  <text x="96" y="326" fill="rgba(255,255,255,0.75)" font-size="24" font-family="Segoe UI, Arial, sans-serif">Premium digital reading edition</text>
+  <text x='64' y='378' fill='white' font-size='36' font-family='Georgia, Times New Roman, serif' font-weight='700'>The Last Ocean of</text><text x='64' y='430' fill='white' font-size='36' font-family='Georgia, Times New Roman, serif' font-weight='700'>Stories 1086</text>
+  <rect x="64" y="1010" width="772" height="164" rx="34" fill="rgba(255,255,255,0.10)" stroke="rgba(255,255,255,0.14)"/>
+  <text x="96" y="1080" fill="rgba(255,255,255,0.76)" font-size="20" font-family="Segoe UI, Arial, sans-serif" letter-spacing="3">AUTHOR</text>
+  <text x="96" y="1128" fill="white" font-size="34" font-family="Segoe UI, Arial, sans-serif" font-weight="700">Aryan Pillai</text>
+  <text x="96" y="1166" fill="rgba(255,255,255,0.76)" font-size="21" font-family="Segoe UI, Arial, sans-serif">Curated for the Smart Library premium store</text>
+  <rect x="64" y="1194" width="180" height="16" rx="8" fill="#f2d0a4" fill-opacity="0.78"/>
+  <rect x="252" y="1194" width="120" height="16" rx="8" fill="rgba(255,255,255,0.38)"/>
+</svg>
