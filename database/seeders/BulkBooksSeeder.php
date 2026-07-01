@@ -73,6 +73,33 @@ class BulkBooksSeeder extends Seeder
         'Kulkarni', 'Malhotra', 'Rao', 'Khanna', 'Bose', 'Iyer', 'Gupta', 'Chopra', 'Pillai', 'Desai',
     ];
 
+    private function buildDescription(string $title, string $author, string $category): string
+    {
+        $categoryAngles = [
+            'Fiction' => 'character-driven storytelling, emotional tension, and a vivid world',
+            'Mystery' => 'clues, suspense, and a slow reveal that keeps the reader guessing',
+            'Romance' => 'warm chemistry, emotional honesty, and a satisfying central connection',
+            'Science Fiction' => 'future-facing ideas, speculative systems, and big-picture imagination',
+            'Fantasy' => 'mythic atmosphere, imaginative worldbuilding, and a sense of wonder',
+            'History' => 'context, chronology, and meaningful connections to the past',
+            'Business' => 'strategy, growth, and practical decisions for modern readers',
+            'Technology' => 'innovation, digital systems, and a clear look at how tools shape life',
+            'Self Help' => 'habits, clarity, and practical motivation for everyday progress',
+            'Biography' => 'personal experience, resilience, and the voice of a real life story',
+            'Psychology' => 'thought patterns, behavior, and the reasons people make choices',
+            'Finance' => 'money habits, smart planning, and confident decision-making',
+            'Education' => 'learning, improvement, and ideas that support deeper understanding',
+            'Philosophy' => 'reflection, meaning, and a thoughtful look at how people think',
+            'Adventure' => 'motion, risk, discovery, and momentum from chapter to chapter',
+        ];
+
+        $angle = $categoryAngles[$category] ?? 'a balanced mix of storytelling, insight, and reading rhythm';
+
+        return "{$title} by {$author} is a {$category} title built around {$angle}. "
+            . "It is written to feel like a premium digital edition, with a clear editorial voice, a memorable premise, "
+            . "and a description that helps the book stand out in a modern library storefront.";
+    }
+
     public function run(): void
     {
         $this->seedCount(self::DEFAULT_COUNT, false);
@@ -96,6 +123,7 @@ class BulkBooksSeeder extends Seeder
             $price = random_int(149, 1499);
             $year = random_int(1998, 2026);
             $theme = strtolower(str_replace(' ', ' ', $category));
+            $description = $this->buildDescription($title, $author, $category);
 
             $previewContent = "Preview of {$title}: discover the opening chapter, the central theme, and the style of {$author}.";
             $readerContent = implode("\n\n", [
@@ -112,6 +140,7 @@ class BulkBooksSeeder extends Seeder
                 'published_year' => $year,
                 'price' => $price,
                 'status' => 'Available',
+                'description' => $description,
                 'preview_content' => $previewContent,
                 'reader_content' => $readerContent,
                 'ebook_file_path' => null,
