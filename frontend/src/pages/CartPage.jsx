@@ -14,9 +14,9 @@ function CartPage({
   onBrowseBooks,
 }) {
   const checkoutSignals = [
-    "Secure Razorpay payment",
-    "Instant reader unlock",
-    "Protected premium access",
+    "Instant order confirmation",
+    "Quick reader access",
+    "Protected digital purchase",
   ];
 
   return (
@@ -25,7 +25,7 @@ function CartPage({
         <div>
           <h3>Review your premium picks and finish your order</h3>
           <p className="about-text">
-            A modern checkout experience for digital books, secure payment, and instant reading access.
+            A modern order experience for digital books with quick confirmation and reading access.
           </p>
         </div>
         <div className="cart-hero-stats">
@@ -137,7 +137,7 @@ function CartPage({
               onClick={onCheckout}
               disabled={checkoutLoading || cartItems.length === 0}
             >
-              {checkoutLoading ? "Processing..." : "Checkout Now"}
+              {checkoutLoading ? "Processing..." : "Place Order"}
             </button>
           </div>
         </aside>
@@ -155,9 +155,8 @@ function CartPage({
             {orders.map((order) => (
               <article className="order-card" key={order.id}>
                 <h4>{formatGbp(order.total)}</h4>
-                <p>Status: {order.payment_status}</p>
-                <p>Method: {order.payment_method}</p>
-                <p>Gateway Order: {order.razorpay_order_id || "Pending"}</p>
+                <p>Status: {order.payment_status || "Confirmed"}</p>
+                <p>Method: {order.payment_method || "Order"}</p>
                 <p>Items: {(order.items || []).length}</p>
               </article>
             ))}
