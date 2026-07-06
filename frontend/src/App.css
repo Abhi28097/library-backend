@@ -1297,6 +1297,19 @@ select:focus {
   gap: 6px;
 }
 
+.review-item-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.review-date {
+  color: var(--muted);
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+
 .admin-user-actions {
   margin-bottom: 18px;
 }

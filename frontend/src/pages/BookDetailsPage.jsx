@@ -3,6 +3,21 @@ import { Link, useParams } from "react-router-dom";
 import { formatGbp } from "../utils/currency";
 import { getBookImageSrc } from "../utils/bookImage";
 
+function formatReviewDateTime(value) {
+  if (!value) return "Just now";
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "Just now";
+
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(date);
+}
+
 function BookDetailsPage({
   apiBase,
   uploadsBase,
@@ -355,7 +370,10 @@ function BookDetailsPage({
               {(book.reviews || []).length > 0 ? (
                 book.reviews.map((item) => (
                   <article className="review-item" key={item.id}>
-                    <strong>{item.user?.name || "Reader"}</strong>
+                    <div className="review-item-head">
+                      <strong>{item.user?.name || "Reader"}</strong>
+                      <span className="review-date">{formatReviewDateTime(item.created_at)}</span>
+                    </div>
                     <p>{item.rating}/5</p>
                     <p>{item.review || "Rated without written review."}</p>
                   </article>
