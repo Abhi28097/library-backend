@@ -76,31 +76,6 @@ function createUserRecord(rawUser) {
   };
 }
 
-let razorpayScriptPromise = null;
-
-function loadRazorpayScript() {
-  if (typeof window === "undefined") {
-    return Promise.reject(new Error("Window is not available"));
-  }
-
-  if (window.Razorpay) {
-    return Promise.resolve(true);
-  }
-
-  if (!razorpayScriptPromise) {
-    razorpayScriptPromise = new Promise((resolve, reject) => {
-      const script = document.createElement("script");
-      script.src = "https://checkout.razorpay.com/v1/checkout.js";
-      script.async = true;
-      script.onload = () => resolve(true);
-      script.onerror = () => reject(new Error("Unable to load Razorpay checkout script"));
-      document.body.appendChild(script);
-    });
-  }
-
-  return razorpayScriptPromise;
-}
-
 function App() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -141,11 +116,6 @@ function App() {
   const [analytics, setAnalytics] = useState(null);
   const [purchasedBooks, setPurchasedBooks] = useState([]);
   const [notifications, setNotifications] = useState([]);
-  const [cartItems, setCartItems] = useState([]);
-  const [cartSummary, setCartSummary] = useState({ items_count: 0, subtotal: 0, total: 0 });
-  const [orders, setOrders] = useState([]);
-  const [cartLoading, setCartLoading] = useState(false);
-  const [checkoutLoading, setCheckoutLoading] = useState(false);
 
   const authHeaders = user?.token ? { Authorization: `Bearer ${user.token}` } : {};
 
@@ -218,40 +188,6 @@ function App() {
     }
   };
 
-  const fetchCart = async () => {
-    if (!user?.token) return;
-
-    try {
-      setCartLoading(true);
-      const res = await fetch(`${API_BASE}/cart`, {
-        headers: authHeaders,
-      });
-      if (!res.ok) throw new Error("Failed to fetch cart");
-      const data = await res.json();
-      setCartItems(Array.isArray(data.items) ? data.items : []);
-      setCartSummary(data.summary || { items_count: 0, subtotal: 0, total: 0 });
-    } catch (error) {
-      console.error("Error fetching cart:", error);
-    } finally {
-      setCartLoading(false);
-    }
-  };
-
-  const fetchOrders = async () => {
-    if (!user?.token) return;
-
-    try {
-      const res = await fetch(`${API_BASE}/orders`, {
-        headers: authHeaders,
-      });
-      if (!res.ok) throw new Error("Failed to fetch orders");
-      const data = await res.json();
-      setOrders(Array.isArray(data) ? data : []);
-    } catch (error) {
-      console.error("Error fetching orders:", error);
-    }
-  };
-
   const fetchAdminIssuedBooks = async () => {
     if (!user?.token || user.role !== "admin") return;
 
@@ -307,14 +243,6 @@ function App() {
 
   useEffect(() => {
     fetchMyLibrary();
-  }, [user?.token]);
-
-  useEffect(() => {
-    fetchCart();
-  }, [user?.token]);
-
-  useEffect(() => {
-    fetchOrders();
   }, [user?.token]);
 
   useEffect(() => {
@@ -619,161 +547,6 @@ function App() {
     }
   };
 
-  const addToCart = async (bookId, quantity = 1, shouldGoToCart = false) => {
-    if (!user?.token) {
-      alert("Please login first.");
-      return;
-    }
-
-    try {
-      const res = await fetch(`${API_BASE}/cart`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...authHeaders,
-        },
-        body: JSON.stringify({ book_id: bookId, quantity }),
-      });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data?.message || "Failed to add item to cart");
-      await fetchCart();
-      if (shouldGoToCart) {
-        navigate("/books");
-      }
-    } catch (error) {
-      console.error("Error adding to cart:", error);
-      alert(error.message || "Unable to add this book to cart.");
-    }
-  };
-
-  const updateCartItem = async (cartItemId, quantity) => {
-    if (!user?.token) return;
-
-    try {
-      const res = await fetch(`${API_BASE}/cart/${cartItemId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          ...authHeaders,
-        },
-        body: JSON.stringify({ quantity }),
-      });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data?.message || "Failed to update cart item");
-      await fetchCart();
-    } catch (error) {
-      console.error("Error updating cart item:", error);
-      alert(error.message || "Unable to update cart item.");
-    }
-  };
-
-  const removeCartItem = async (cartItemId) => {
-    if (!user?.token) return;
-
-    try {
-      const res = await fetch(`${API_BASE}/cart/${cartItemId}`, {
-        method: "DELETE",
-        headers: authHeaders,
-      });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data?.message || "Failed to remove cart item");
-      await fetchCart();
-    } catch (error) {
-      console.error("Error removing cart item:", error);
-      alert(error.message || "Unable to remove cart item.");
-    }
-  };
-
-  const checkoutCart = async () => {
-    if (!user?.token) {
-      alert("Please login first.");
-      return;
-    }
-
-    if (cartItems.length === 0) {
-      alert("Your cart is empty.");
-      return;
-    }
-
-    try {
-      setCheckoutLoading(true);
-      await loadRazorpayScript();
-
-      const res = await fetch(`${API_BASE}/checkout`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...authHeaders,
-        },
-        body: JSON.stringify({
-          payment_method: "card",
-        }),
-      });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data?.message || "Checkout failed");
-
-      const options = {
-        key: data.key,
-        amount: data.checkout?.amount,
-        currency: data.checkout?.currency || "INR",
-        name: data.checkout?.name || "Smart Library Hub",
-        description: data.checkout?.description || "Book purchase checkout",
-        order_id: data.checkout?.order_id,
-        prefill: data.checkout?.prefill || {},
-        notes: data.checkout?.notes || {},
-        theme: {
-          color: "#8b4513",
-        },
-        handler: async (response) => {
-          try {
-            const verifyRes = await fetch(`${API_BASE}/checkout/verify`, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                ...authHeaders,
-              },
-              body: JSON.stringify({
-                local_order_id: data.order?.id,
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_signature: response.razorpay_signature,
-              }),
-            });
-            const verifyData = await verifyRes.json().catch(() => ({}));
-            if (!verifyRes.ok) {
-              throw new Error(verifyData?.message || "Payment verification failed");
-            }
-            await fetchCart();
-            await fetchOrders();
-            await fetchMyLibrary();
-            alert("Payment successful. Your books are now unlocked.");
-            navigate("/profile");
-          } catch (error) {
-            console.error("Error verifying payment:", error);
-            alert(error.message || "Payment completed but verification failed.");
-          } finally {
-            setCheckoutLoading(false);
-          }
-        },
-        modal: {
-          ondismiss: () => {
-            setCheckoutLoading(false);
-          },
-        },
-      };
-
-      const razorpay = new window.Razorpay(options);
-      razorpay.open();
-    } catch (error) {
-      console.error("Error checking out:", error);
-      alert(error.message || "Unable to complete checkout.");
-    } finally {
-      if (!window.Razorpay) {
-        setCheckoutLoading(false);
-      }
-    }
-  };
-
   const issueBookToUser = async () => {
     if (!issueForm.user_id || !issueForm.book_id) {
       alert("Please select both a user and a book.");
@@ -871,10 +644,6 @@ function App() {
     const clonedBooks = [...filteredBooks];
 
     switch (sortBy) {
-      case "price-low":
-        return clonedBooks.sort((a, b) => Number(a.price || 0) - Number(b.price || 0));
-      case "price-high":
-        return clonedBooks.sort((a, b) => Number(b.price || 0) - Number(a.price || 0));
       case "rating":
         return clonedBooks.sort(
           (a, b) => Number(b.reviews_avg_rating || 0) - Number(a.reviews_avg_rating || 0)
@@ -935,9 +704,6 @@ function App() {
       localStorage.removeItem("user");
       setUser(null);
       setProfileMenuOpen(false);
-      setCartItems([]);
-      setCartSummary({ items_count: 0, subtotal: 0, total: 0 });
-      setOrders([]);
       navigate("/");
     }
   };
