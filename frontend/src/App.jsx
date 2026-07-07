@@ -7,7 +7,6 @@ import BookDetailsPage from "./pages/BookDetailsPage";
 import ProfilePage from "./pages/ProfilePage";
 import AboutPage from "./pages/AboutPage";
 import AdminPage from "./pages/AdminPage";
-import CartPage from "./pages/CartPage";
 import "./App.css";
 
 const API_BASE = import.meta.env.VITE_API_BASE || "http://127.0.0.1:8000/api";
@@ -639,7 +638,7 @@ function App() {
       if (!res.ok) throw new Error(data?.message || "Failed to add item to cart");
       await fetchCart();
       if (shouldGoToCart) {
-        navigate("/cart");
+        navigate("/books");
       }
     } catch (error) {
       console.error("Error adding to cart:", error);
@@ -996,9 +995,6 @@ function App() {
         <nav className="topnav">
           <NavLink to="/" end className={({ isActive }) => (isActive ? "nav-btn active" : "nav-btn")}>Home</NavLink>
           <NavLink to="/books" className={({ isActive }) => (isActive ? "nav-btn active" : "nav-btn")}>Books</NavLink>
-          <NavLink to="/cart" className={({ isActive }) => (isActive ? "nav-btn active" : "nav-btn")}>
-            Cart {cartSummary.items_count > 0 ? `(${cartSummary.items_count})` : ""}
-          </NavLink>
           <NavLink to="/profile" className={({ isActive }) => (isActive ? "nav-btn active" : "nav-btn")}>Profile</NavLink>
           <NavLink to="/about" className={({ isActive }) => (isActive ? "nav-btn active" : "nav-btn")}>About</NavLink>
           {isAdmin && <NavLink to="/admin" className={({ isActive }) => (isActive ? "nav-btn active" : "nav-btn")}>Admin Panel</NavLink>}
@@ -1044,7 +1040,6 @@ function App() {
           <Route path="/books" element={<BooksPage books={paginatedBooks} totalBooks={sortedBooks.length} currentPage={currentPage} totalPages={totalBookPages} onPageChange={setCurrentPage} loading={loading} search={search} setSearch={setSearch} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} selectedStatus={selectedStatus} setSelectedStatus={setSelectedStatus} sortBy={sortBy} setSortBy={setSortBy} categoryOptions={categoryOptions} ratings={ratings} isAdmin={isAdmin} uploadsBase={UPLOADS_BASE} wishlistBookIds={wishlistBookIds} borrowRequests={borrowRequests} onBorrowRequest={requestBorrow} onWishlistToggle={toggleWishlist} onRate={submitRating} onOpenBook={(bookId) => navigate(`/books/${bookId}`)} onEditBook={editBook} onDeleteBook={deleteBook} />} />
           <Route path="/books/:bookId" element={<BookDetailsPage apiBase={API_BASE} uploadsBase={UPLOADS_BASE} authToken={user.token} hasAccess={(bookId) => isAdmin || purchasedBookIds.has(Number(bookId)) || readableIssuedBookIds.has(Number(bookId))} onRefreshBooks={fetchBooks} onOpenReader={(bookId) => navigate(`/reader/${bookId}`)} />} />
           <Route path="/reader/:bookId" element={<BookDetailsPage apiBase={API_BASE} uploadsBase={UPLOADS_BASE} authToken={user.token} isReaderMode hasAccess={() => true} onRefreshBooks={fetchBooks} onOpenReader={() => {}} />} />
-          <Route path="/cart" element={<CartPage cartItems={cartItems} cartSummary={cartSummary} orders={orders} loading={cartLoading} checkoutLoading={checkoutLoading} uploadsBase={UPLOADS_BASE} onUpdateQuantity={updateCartItem} onRemoveItem={removeCartItem} onCheckout={checkoutCart} onBrowseBooks={() => navigate("/books")} />} />
           <Route path="/profile" element={<ProfilePage user={user} isAdmin={isAdmin} editingProfile={editingProfile} setEditingProfile={setEditingProfile} profileDraft={profileDraft} wishlistItems={wishlistItems} issuedBooks={issuedBooks} borrowRequests={borrowRequests} purchasedBooks={purchasedBooks} notifications={notifications} onProfileChange={handleProfileChange} onSaveProfile={saveProfile} onCancelProfile={() => { setProfileDraft(user.profile || defaultProfile); setEditingProfile(false); }} onGoAbout={() => navigate("/about")} onGoBooks={() => navigate("/books")} onGoAdmin={() => navigate("/admin")} onOpenBook={(bookId) => navigate(`/books/${bookId}`)} onOpenReader={(bookId) => navigate(`/reader/${bookId}`)} onLogout={logout} />} />
           <Route path="/about" element={<AboutPage isAdmin={isAdmin} />} />
           <Route
