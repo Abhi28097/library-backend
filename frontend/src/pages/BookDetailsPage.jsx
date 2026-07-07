@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { formatGbp } from "../utils/currency";
 import { getBookImageSrc } from "../utils/bookImage";
 
 function formatReviewDateTime(value) {
@@ -301,7 +300,6 @@ function BookDetailsPage({
         </div>
 
         <aside className="detail-panel detail-purchase-panel">
-          <strong className="detail-price">{formatGbp(book.price)}</strong>
           <p className="about-text">
             Unlock protected reading access, premium preview content, and ebook delivery for supported titles.
           </p>

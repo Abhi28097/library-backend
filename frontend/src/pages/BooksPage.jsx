@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react";
-import { formatGbp } from "../utils/currency";
 import { getBookImageSrc } from "../utils/bookImage";
 
 function BooksPage({
@@ -37,9 +36,6 @@ function BooksPage({
   );
   const loadMoreRef = useRef(null);
   const availableCount = books.filter((book) => book.status === "Available").length;
-  const averagePrice = books.length
-    ? books.reduce((sum, book) => sum + Number(book.price || 0), 0) / books.length
-    : 0;
 
   useEffect(() => {
     const element = loadMoreRef.current;
@@ -105,8 +101,6 @@ function BooksPage({
               <option value="featured">Featured</option>
               <option value="latest">Latest</option>
               <option value="rating">Top Rated</option>
-              <option value="price-low">Price: Low to High</option>
-              <option value="price-high">Price: High to Low</option>
               <option value="title">Title A-Z</option>
             </select>
           </label>
@@ -140,10 +134,6 @@ function BooksPage({
           <article className="storefront-stat">
             <span>Available</span>
             <strong>{availableCount}</strong>
-          </article>
-          <article className="storefront-stat">
-            <span>Avg Price</span>
-            <strong>{formatGbp(averagePrice)}</strong>
           </article>
         </div>
       </div>
@@ -196,7 +186,6 @@ function BooksPage({
                     <h3>{book.title}</h3>
                     <p className="meta-line">By {book.author}</p>
                     <p className="meta-line">Published {book.published_year}</p>
-                    <p className="price-line">{formatGbp(book.price)}</p>
                     <p className="meta-line">{displayRating} average from {book.reviews_count || 0} review(s)</p>
                     <p className="summary-text">
                       {book.description || "No description has been added for this book yet."}

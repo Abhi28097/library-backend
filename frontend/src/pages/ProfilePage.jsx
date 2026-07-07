@@ -1,5 +1,3 @@
-import { formatGbp } from "../utils/currency";
-
 function ProfilePage({
   user,
   isAdmin,
@@ -32,7 +30,7 @@ function ProfilePage({
     ...purchasedBooks.map((item) => ({
       id: `purchase-${item.book_id}`,
       title: `Purchased ${item.title}`,
-      description: `Unlocked digital access for ${formatGbp(item.price || 0)}.`,
+      description: "Unlocked digital access for this book.",
       createdAt: null,
       type: "success",
     })),
@@ -179,7 +177,6 @@ function ProfilePage({
                   <div>
                     <h4>{item.title || "Book"}</h4>
                     <p>{item.author || "Unknown author"}</p>
-                    <p>Paid Price: {formatGbp(item.price || 0)}</p>
                   </div>
                   <button className="primary-btn" onClick={() => onOpenReader(item.book_id)}>
                     Read Now
@@ -235,7 +232,6 @@ function ProfilePage({
                     <p>Issued: {item.issued_at ? new Date(item.issued_at).toLocaleString() : "N/A"}</p>
                     <p>Due: {item.due_at ? new Date(item.due_at).toLocaleString() : "N/A"}</p>
                     <p>Overdue Days: {item.overdue_days || 0}</p>
-                    <p className={item.fine_amount > 0 ? "overdue-text" : ""}>Fine: {formatGbp(item.fine_amount || 0)}</p>
                     <p>Returned: {item.returned_at ? new Date(item.returned_at).toLocaleString() : "Not returned"}</p>
                   </div>
                   <button className="secondary-btn" onClick={() => onOpenBook(item.book_id)}>

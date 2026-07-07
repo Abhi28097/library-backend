@@ -1,4 +1,3 @@
-import { formatGbp } from "../utils/currency";
 import { getBookImageSrc } from "../utils/bookImage";
 
 function HomePage({
@@ -166,7 +165,6 @@ function HomePage({
                 <div>
                   <h4>{book.title}</h4>
                   <p>{book.author}</p>
-                  <strong className="mini-book-price">{formatGbp(book.price)}</strong>
                 </div>
               </article>
             ))}

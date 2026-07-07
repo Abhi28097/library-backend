@@ -1,5 +1,4 @@
 import { getBookImageSrc } from "../utils/bookImage";
-import { formatGbp } from "../utils/currency";
 
 function CartPage({
   cartItems,
@@ -26,10 +25,6 @@ function CartPage({
           <article className="cart-hero-stat">
             <span>Items</span>
             <strong>{cartSummary.items_count || 0}</strong>
-          </article>
-          <article className="cart-hero-stat">
-            <span>Total</span>
-            <strong>{formatGbp(cartSummary.total)}</strong>
           </article>
         </div>
       </div>
@@ -79,7 +74,6 @@ function CartPage({
                   <div className="cart-item-copy">
                     <h4>{item.book?.title || "Untitled Book"}</h4>
                     <p>{item.book?.author || "Unknown Author"}</p>
-                    <strong>{formatGbp(item.unit_price)}</strong>
                   </div>
 
                   <div className="cart-item-actions">
@@ -92,7 +86,6 @@ function CartPage({
                         onChange={(e) => onUpdateQuantity(item.id, e.target.value)}
                       />
                     </label>
-                    <strong>{formatGbp(item.line_total)}</strong>
                     <button className="ghost-btn danger-btn" onClick={() => onRemoveItem(item.id)}>
                       Remove
                     </button>
@@ -106,18 +99,7 @@ function CartPage({
         <aside className="side-stack">
           <div className="side-card order-summary-card">
             <h3>{cartSummary.items_count || 0} item(s)</h3>
-            <div className="summary-line">
-              <span>Subtotal</span>
-              <strong>{formatGbp(cartSummary.subtotal)}</strong>
-            </div>
-            <div className="summary-line">
-              <span>Tax</span>
-              <strong>{formatGbp(cartSummary.tax)}</strong>
-            </div>
-            <div className="summary-line">
-              <span>Total</span>
-              <strong>{formatGbp(cartSummary.total)}</strong>
-            </div>
+            <p className="about-text">Pricing is hidden for this submission view.</p>
             <button
               className="primary-btn full-width-btn"
               onClick={onCheckout}
@@ -130,17 +112,17 @@ function CartPage({
       </div>
 
       <div className="wide-card">
-        <div className="section-head">
-          <div>
-            <h3>Your premium purchase history</h3>
+          <div className="section-head">
+            <div>
+              <h3>Your premium purchase history</h3>
+            </div>
           </div>
-        </div>
 
         {(orders || []).length > 0 ? (
           <div className="order-history-grid">
             {orders.map((order) => (
               <article className="order-card" key={order.id}>
-                <h4>{formatGbp(order.total)}</h4>
+                <h4>Order</h4>
                 <p>Status: {order.payment_status || "Confirmed"}</p>
                 <p>Method: {order.payment_method || "Order"}</p>
                 <p>Items: {(order.items || []).length}</p>
