@@ -23,7 +23,6 @@ function BookDetailsPage({
   uploadsBase,
   authToken,
   onRefreshBooks,
-  onBuyNow,
   onOpenReader,
   hasAccess,
   isReaderMode = false,
@@ -307,7 +306,6 @@ function BookDetailsPage({
             Unlock protected reading access, premium preview content, and ebook delivery for supported titles.
           </p>
           <div className="detail-action-stack">
-            <button className="secondary-btn full-width-btn" onClick={() => onBuyNow(book.id)}>Buy Now</button>
             {hasAccess?.(book.id) && (
               <button className="ghost-btn full-width-btn" onClick={() => onOpenReader(book.id)}>Read Now</button>
             )}

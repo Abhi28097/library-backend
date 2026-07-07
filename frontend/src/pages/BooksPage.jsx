@@ -26,7 +26,6 @@ function BooksPage({
   onBorrowRequest,
   onWishlistToggle,
   onRate,
-  onBuyNow,
   onOpenBook,
   onEditBook,
   onDeleteBook,
@@ -225,9 +224,6 @@ function BooksPage({
                         </>
                       ) : (
                         <>
-                          <button className="secondary-btn" onClick={() => onBuyNow(book.id)}>
-                            Buy Now
-                          </button>
                           <button className="ghost-btn" onClick={() => onWishlistToggle(book.id)}>
                             {wishlistBookIds.has(book.id) ? "Remove Wishlist" : "Add to Wishlist"}
                           </button>

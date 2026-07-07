@@ -13,12 +13,6 @@ function CartPage({
   onCheckout,
   onBrowseBooks,
 }) {
-  const checkoutSignals = [
-    "Instant order confirmation",
-    "Quick reader access",
-    "Protected digital purchase",
-  ];
-
   return (
     <section className="single-column-page cart-page-layout">
       <div className="cart-hero-panel">
@@ -123,14 +117,6 @@ function CartPage({
             <div className="summary-line">
               <span>Total</span>
               <strong>{formatGbp(cartSummary.total)}</strong>
-            </div>
-            <div className="checkout-signal-list">
-              {checkoutSignals.map((item) => (
-                <div className="checkout-signal" key={item}>
-                  <span className="checkout-signal-dot" />
-                  <p>{item}</p>
-                </div>
-              ))}
             </div>
             <button
               className="primary-btn full-width-btn"
